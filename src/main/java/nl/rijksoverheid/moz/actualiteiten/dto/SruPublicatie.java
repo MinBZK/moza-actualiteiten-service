@@ -1,5 +1,7 @@
 package nl.rijksoverheid.moz.actualiteiten.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 
 /**
@@ -12,6 +14,7 @@ public class SruPublicatie {
     public String type;
     public String creator;
     public String modified;
+    @JsonProperty("abstract")
     public String abstractText;
     public String preferredUrl;
     public String bronUrl;
