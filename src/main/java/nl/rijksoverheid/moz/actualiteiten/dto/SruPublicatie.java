@@ -1,6 +1,7 @@
 package nl.rijksoverheid.moz.actualiteiten.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -9,7 +10,9 @@ import java.util.List;
  * {@code SruPublicatie} type moza-portaal currently consumes.
  */
 public class SruPublicatie {
+    @NotNull
     public String id;
+    @NotNull
     public String title;
     public String type;
     public String creator;

@@ -7,23 +7,22 @@ import jakarta.persistence.Index;
 import jakarta.persistence.Table;
 
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "postcode_voorkeur", indexes = @Index(name = "idx_postcode_koppelcode", columnList = "koppelcode"))
+@Table(name = "postcode_voorkeur", indexes = @Index(name = "idx_postcode_subject_id", columnList = "subject_id"))
 public class PostcodeVoorkeur extends PanacheEntity {
 
-    @Column(nullable = false)
-    public UUID koppelcode;
+    @Column(name = "subject_id", nullable = false)
+    public String subjectId;
 
     @Column(nullable = false)
     public String postcode;
 
-    public static List<PostcodeVoorkeur> listForKoppelcode(UUID koppelcode) {
-        return list("koppelcode", koppelcode);
+    public static List<PostcodeVoorkeur> listForSubject(String subjectId) {
+        return list("subjectId", subjectId);
     }
 
-    public static long deleteByIdAndKoppelcode(Long id, UUID koppelcode) {
-        return delete("id = ?1 AND koppelcode = ?2", id, koppelcode);
+    public static long deleteByIdAndSubject(Long id, String subjectId) {
+        return delete("id = ?1 AND subjectId = ?2", id, subjectId);
     }
 }

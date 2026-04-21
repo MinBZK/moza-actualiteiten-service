@@ -8,14 +8,13 @@ import jakarta.persistence.Table;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.UUID;
 
 @Entity
-@Table(name = "favoriet_artikel", indexes = @Index(name = "idx_favoriet_koppelcode", columnList = "koppelcode"))
+@Table(name = "favoriet_artikel", indexes = @Index(name = "idx_favoriet_subject_id", columnList = "subject_id"))
 public class FavorietArtikel extends PanacheEntity {
 
-    @Column(nullable = false)
-    public UUID koppelcode;
+    @Column(name = "subject_id", nullable = false)
+    public String subjectId;
 
     @Column(name = "article_id", nullable = false)
     public String articleId;
@@ -26,11 +25,11 @@ public class FavorietArtikel extends PanacheEntity {
     @Column(name = "added_at", nullable = false)
     public Instant addedAt;
 
-    public static List<FavorietArtikel> listForKoppelcode(UUID koppelcode) {
-        return list("koppelcode", koppelcode);
+    public static List<FavorietArtikel> listForSubject(String subjectId) {
+        return list("subjectId", subjectId);
     }
 
-    public static long deleteByIdAndKoppelcode(Long id, UUID koppelcode) {
-        return delete("id = ?1 AND koppelcode = ?2", id, koppelcode);
+    public static long deleteByIdAndSubject(Long id, String subjectId) {
+        return delete("id = ?1 AND subjectId = ?2", id, subjectId);
     }
 }

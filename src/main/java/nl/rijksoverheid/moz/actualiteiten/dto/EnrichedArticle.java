@@ -1,5 +1,6 @@
 package nl.rijksoverheid.moz.actualiteiten.dto;
 
+import jakarta.validation.constraints.NotNull;
 import nl.rijksoverheid.moz.actualiteiten.external.ondernemersplein.ArticleContract;
 import nl.rijksoverheid.moz.actualiteiten.external.ondernemersplein.ArticleSummary;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * portaal can filter client-side when it wants to.
  */
 public class EnrichedArticle {
+    @NotNull
     public String identifier;
     public String headLine;
     public String additionalType;

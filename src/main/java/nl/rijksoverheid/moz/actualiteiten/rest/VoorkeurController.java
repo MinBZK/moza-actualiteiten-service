@@ -14,6 +14,7 @@ import nl.rijksoverheid.moz.actualiteiten.dto.FavorietRequest;
 import nl.rijksoverheid.moz.actualiteiten.dto.OnderwerpRequest;
 import nl.rijksoverheid.moz.actualiteiten.dto.PostcodeRequest;
 import nl.rijksoverheid.moz.actualiteiten.dto.VoorkeurenResponse;
+import nl.rijksoverheid.moz.actualiteiten.security.SubjectIdContext;
 import nl.rijksoverheid.moz.actualiteiten.services.VoorkeurService;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -21,84 +22,66 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Path("/api/actualiteitenservice/v1/voorkeuren")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-@Tag(name = "Voorkeuren", description = "Postcode-, onderwerp- en favoriet-voorkeuren per partij (via koppelcode)")
+@Tag(name = "Voorkeuren", description = "Postcode-, onderwerp- en favoriet-voorkeuren per partij")
 public class VoorkeurController {
 
     @Inject
     VoorkeurService voorkeurService;
 
+    @Inject
+    SubjectIdContext subjectIdContext;
+
     @GET
-    @Path("/{identificatieType}/{identificatieNummer}")
-    @Operation(summary = "Alle voorkeuren voor een partij")
-    public VoorkeurenResponse getAll(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer) {
-        return voorkeurService.getAll(identificatieType, identificatieNummer);
+    @Operation(summary = "Alle voorkeuren voor de ingelogde partij")
+    public VoorkeurenResponse getAll() {
+        return voorkeurService.getAll(subjectIdContext.requireSubjectId());
     }
 
     @POST
-    @Path("/postcode/{identificatieType}/{identificatieNummer}")
+    @Path("/postcode")
     @Operation(summary = "Voeg postcode-voorkeur toe")
-    public Response addPostcode(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            PostcodeRequest request) {
-        voorkeurService.addPostcode(identificatieType, identificatieNummer, request.postcode);
+    public Response addPostcode(PostcodeRequest request) {
+        voorkeurService.addPostcode(subjectIdContext.requireSubjectId(), request.postcode);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
-    @Path("/postcode/{identificatieType}/{identificatieNummer}/{id}")
+    @Path("/postcode/{id}")
     @Operation(summary = "Verwijder postcode-voorkeur")
-    public Response deletePostcode(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            @PathParam("id") Long id) {
-        boolean deleted = voorkeurService.deletePostcode(identificatieType, identificatieNummer, id);
+    public Response deletePostcode(@PathParam("id") Long id) {
+        boolean deleted = voorkeurService.deletePostcode(subjectIdContext.requireSubjectId(), id);
         return deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
-    @Path("/onderwerp/{identificatieType}/{identificatieNummer}")
+    @Path("/onderwerp")
     @Operation(summary = "Voeg onderwerp-voorkeur toe")
-    public Response addOnderwerp(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            OnderwerpRequest request) {
-        voorkeurService.addOnderwerp(identificatieType, identificatieNummer, request.onderwerp);
+    public Response addOnderwerp(OnderwerpRequest request) {
+        voorkeurService.addOnderwerp(subjectIdContext.requireSubjectId(), request.onderwerp);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
-    @Path("/onderwerp/{identificatieType}/{identificatieNummer}/{id}")
+    @Path("/onderwerp/{id}")
     @Operation(summary = "Verwijder onderwerp-voorkeur")
-    public Response deleteOnderwerp(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            @PathParam("id") Long id) {
-        boolean deleted = voorkeurService.deleteOnderwerp(identificatieType, identificatieNummer, id);
+    public Response deleteOnderwerp(@PathParam("id") Long id) {
+        boolean deleted = voorkeurService.deleteOnderwerp(subjectIdContext.requireSubjectId(), id);
         return deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 
     @POST
-    @Path("/favoriet/{identificatieType}/{identificatieNummer}")
+    @Path("/favoriet")
     @Operation(summary = "Voeg favoriet artikel toe")
-    public Response addFavoriet(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            FavorietRequest request) {
-        voorkeurService.addFavoriet(identificatieType, identificatieNummer, request.articleId, request.articleType);
+    public Response addFavoriet(FavorietRequest request) {
+        voorkeurService.addFavoriet(subjectIdContext.requireSubjectId(), request.articleId, request.articleType);
         return Response.status(Response.Status.CREATED).build();
     }
 
     @DELETE
-    @Path("/favoriet/{identificatieType}/{identificatieNummer}/{id}")
+    @Path("/favoriet/{id}")
     @Operation(summary = "Verwijder favoriet artikel")
-    public Response deleteFavoriet(
-            @PathParam("identificatieType") String identificatieType,
-            @PathParam("identificatieNummer") String identificatieNummer,
-            @PathParam("id") Long id) {
-        boolean deleted = voorkeurService.deleteFavoriet(identificatieType, identificatieNummer, id);
+    public Response deleteFavoriet(@PathParam("id") Long id) {
+        boolean deleted = voorkeurService.deleteFavoriet(subjectIdContext.requireSubjectId(), id);
         return deleted ? Response.noContent().build() : Response.status(Response.Status.NOT_FOUND).build();
     }
 }

@@ -1,11 +1,13 @@
 package nl.rijksoverheid.moz.actualiteiten.dto;
 
+import jakarta.validation.constraints.NotNull;
 import nl.rijksoverheid.moz.actualiteiten.external.ondernemersplein.SubsidieContract;
 import nl.rijksoverheid.moz.actualiteiten.external.ondernemersplein.SubsidieSummary;
 
 import java.util.List;
 
 public class EnrichedSubsidie {
+    @NotNull
     public String identifier;
     public String title;
     public String url;

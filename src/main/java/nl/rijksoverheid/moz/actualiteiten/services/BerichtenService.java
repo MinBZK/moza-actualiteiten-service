@@ -23,8 +23,8 @@ public class BerichtenService {
     @Inject
     IngestionStatusService ingestionStatus;
 
-    public List<SruPublicatie> getBerichtenForPartij(String identificatieType, String identificatieNummer) {
-        List<String> postcodes = voorkeurService.getPostcodes(identificatieType, identificatieNummer);
+    public List<SruPublicatie> getBerichtenForPartij(String subjectId) {
+        List<String> postcodes = voorkeurService.getPostcodes(subjectId);
         if (postcodes.isEmpty()) return List.of();
 
         List<SruPublicatie> merged = new ArrayList<>();
